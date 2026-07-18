@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <title>2026年存款计划</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #13131a;
+            --surface2: #1a1a24;
+            --surface3: #22222e;
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --accent: #f43f5e;
+            --accent-light: #fb7185;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --info: #06b6d4;
+            --text: #e4e4e7;
+            --text-muted: #71717a;
+            --text-dim: #52525b;
+            --border: #27272a;
+            --glass: rgba(255,255,255,0.03);
+        }
+
+        body.light-mode {
+            --bg: #f0f2f5;
+            --surface: #ffffff;
+            --surface2: #f5f5f5;
+            --surface3: #e8e8e8;
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --accent: #e11d48;
+            --accent-light: #f43f5e;
+            --success: #059669;
+            --success-light: #10b981;
+            --warning: #d97706;
+            --warning-light: #f59e0b;
+            --info: #0891b2;
+            --text: #1a1a2e;
+            --text-muted: #6b7280;
+            --text-dim: #9ca3af;
+            --border: #e5e7eb;
+            --glass: rgba(0,0,0,0.02);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        @media (min-width: 520px) {
+            .app-header, .tab-bar { max-width: 680px; margin-left: auto; margin-right: auto; }
+            .page { max-width: 680px; margin-left: auto; margin-right: auto; }
+        }
+
+        .mono { font-family: 'DM Mono', monospace; }
+
+        .app-header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.3s;
+        }
+
+        body.light-mode .app-header { background: rgba(240,242,245,0.85); }
+
+        .header-left { display: flex; flex-direction: column; }
+
+        .app-title {
+            font-size: 18px; font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .app-date { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .theme-toggle {
+            width: 44px; height: 26px; border-radius: 13px;
+            background: var(--surface3); border: 1px solid var(--border);
+            cursor: pointer; position: relative; transition: all 0.3s;
+        }
+
+        .theme-toggle .thumb {
+            width: 20px; height: 20px; border-radius: 50%; background: var(--primary);
+            position: absolute; top: 2px; left: 2px; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; font-size: 12px;
+        }
+
+        body.light-mode .theme-toggle .thumb { left: 20px; background: var(--warning); }
+
+        .sync-btn {
+            background: none; border: 1px solid var(--border); color: var(--text-muted);
+            font-size: 18px; cursor: pointer; width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+
+        .sync-btn:active { transform: scale(0.9); }
+
+        .tab-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(19,19,26,0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-around; padding: 8px 0;
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+            transition: background 0.3s;
+        }
+
+        body.light-mode .tab-bar { background: rgba(255,255,255,0.95); }
+
+        .tab-item {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            padding: 4px 12px; cursor: pointer; transition: all 0.2s; border-radius: 12px;
+        }
+
+        .tab-item.active .tab-icon { color: var(--primary-light); }
+        .tab-item.active .tab-label { color: var(--primary-light); }
+
+        .tab-icon { font-size: 22px; color: var(--text-dim); transition: color 0.2s; }
+        .tab-label { font-size: 10px; color: var(--text-dim); transition: color 0.2s; }
+
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+            border-radius: 20px; padding: 28px; margin-bottom: 20px;
+            position: relative; overflow: hidden;
+        }
+
+        body.light-mode .hero-card { background: linear-gradient(135deg, #4338ca 0%, #6366f1 50%, #4338ca 100%); }
+
+        .hero-card::before {
+            content: ''; position: absolute; top: -50%; right: -30%;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .hero-amount { font-size: 42px; font-weight: 900; font-family: 'DM Mono', monospace; color: white; line-height: 1.1; }
+        .hero-target { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+        .hero-target span { color: var(--warning-light); font-weight: 600; }
+
+        .hero-compare {
+            display: flex; gap: 12px; margin-top: 12px; padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-compare-item {
+            flex: 1; text-align: center; padding: 8px;
+            background: rgba(255,255,255,0.05); border-radius: 10px;
+        }
+
+        .hero-compare-item .lbl { font-size: 10px; color: rgba(255,255,255,0.4); }
+        .hero-compare-item .val { font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; color: white; margin-top: 2px; }
+
+        .reconcile-btn {
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+            color: white; font-size: 11px; padding: 4px 10px; border-radius: 8px;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+
+        .reconcile-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.25); }
+
+        .hero-reconcile-time { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 8px; font-family: 'DM Mono', monospace; }
+
+        .progress-ring-container { display: flex; justify-content: center; margin: 24px 0 8px; }
+        .progress-ring-wrapper { position: relative; width: 160px; height: 160px; }
+        .progress-ring { transform: rotate(-90deg); }
+        .progress-ring-bg { stroke: rgba(255,255,255,0.08); }
+        .progress-ring-fill { stroke: url(#ringGradient); stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+        .progress-ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .progress-pct { font-size: 36px; font-weight: 900; font-family: 'DM Mono', monospace; color: white; }
+        .progress-label { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 16px; transition: background 0.3s, border-color 0.3s;
+        }
+
+        .stat-icon { font-size: 20px; margin-bottom: 8px; }
+        .stat-value { font-size: 22px; font-weight: 700; font-family: 'DM Mono', monospace; }
+        .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        .stat-card.green .stat-value { color: var(--success-light); }
+        .stat-card.blue .stat-value { color: var(--info); }
+        .stat-card.red .stat-value { color: var(--accent-light); }
+        .stat-card.yellow .stat-value { color: var(--warning-light); }
+
+        .month-card, .target-card, .weekly-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 20px; margin-bottom: 16px; transition: background 0.3s, border-color 0.3s;
+        }
+
+        .month-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .month-title { font-size: 16px; font-weight: 600; }
+
+        .month-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        .month-status.current { background: rgba(99,102,241,0.15); color: var(--primary-light); }
+        .month-status.done { background: rgba(16,185,129,0.15); color: var(--success-light); }
+        .month-status.future { background: rgba(113,113,122,0.15); color: var(--text-muted); }
+
+        .progress-bar-container {
+            background: rgba(255,255,255,0.05); border-radius: 8px; height: 8px; margin: 12px 0; overflow: hidden;
+        }
+
+        body.light-mode .progress-bar-container { background: rgba(0,0,0,0.05); }
+
+        .progress-bar-fill {
+            height: 100%; border-radius: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transition: width 0.8s ease;
+        }
+
+        .progress-bar-fill.over { background: linear-gradient(90deg, var(--success), var(--success-light)); }
+
+        .month-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .month-detail { text-align: center; padding: 8px; background: var(--glass); border-radius: 8px; }
+        .month-detail .val { font-size: 14px; font-weight: 600; font-family: 'DM Mono', monospace; }
+        .month-detail .lbl { font-size: 10px; color: var(--text-muted); }
+
+        .target-hero { text-align: center; padding: 16px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .target-hero-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .target-hero-amount { font-size: 36px; font-weight: 900; font-family: 'DM Mono', monospace; line-height: 1.1; }
+        .target-hero-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+        .target-breakdown { display: flex; flex-direction: column; gap: 12px; }
+
+        .target-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; background: var(--glass); border-radius: 12px;
+        }
+
+        .target-row-icon { font-size: 24px; flex-shrink: 0; }
+        .target-row-info { flex: 1; }
+        .target-row-label { font-size: 12px; color: var(--text-muted); }
+        .target-row-detail { font-size: 13px; font-family: 'DM Mono', monospace; margin-top: 2px; }
+        .target-row-amount { text-align: right; flex-shrink: 0; }
+        .target-row-amount .target { font-size: 16px; font-weight: 700; font-family: 'DM Mono', monospace; }
+        .target-row-amount .actual { font-size: 10px; color: var(--text-muted); }
+        .target-row-done { opacity: 0.6; }
+
+        .item-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+            padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
+            transition: all 0.2s; cursor: pointer;
+        }
+
+        .item-card:active { transform: scale(0.98); }
+        .item-card.sold { opacity: 0.6; }
+
+        .item-check {
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: all 0.2s; font-size: 14px;
+        }
+
+        .item-card.sold .item-check { background: var(--success); border-color: var(--success); color: white; }
+
+        .item-info { flex: 1; }
+        .item-name { font-size: 14px; font-weight: 500; }
+        .item-price { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+        .item-actual-price { font-size: 11px; color: var(--success-light); font-family: 'DM Mono', monospace; margin-top: 2px; }
+        .item-amount { font-size: 16px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--success-light); }
+        .item-card.sold .item-amount { text-decoration: line-through; color: var(--text-dim); }
+
+        .summary-bar {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+            padding: 16px; margin-bottom: 20px; transition: background 0.3s, border-color 0.3s;
+        }
+
+        .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .summary-row:last-child { margin-bottom: 0; }
+        .summary-label { font-size: 13px; color: var(--text-muted); }
+        .summary-val { font-size: 14px; font-weight: 600; font-family: 'DM Mono', monospace; }
+
+        .delivery-form {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 20px; margin-bottom: 16px; transition: background 0.3s, border-color 0.3s;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+
+        .form-input {
+            width: 100%; padding: 12px 16px; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text); font-size: 15px;
+            font-family: 'DM Mono', monospace; outline: none; transition: border-color 0.2s, background 0.3s;
+        }
+
+        .form-input:focus { border-color: var(--primary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .btn {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+        .btn-danger { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-small { padding: 8px 16px; font-size: 13px; width: auto; }
+
+        .record-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+            padding: 14px 16px; margin-bottom: 8px; display: flex;
+            justify-content: space-between; align-items: center;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .record-date { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+        .record-info { display: flex; gap: 16px; font-size: 13px; color: var(--text-muted); }
+        .record-amount { font-size: 16px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--success-light); }
+        .record-delete { color: var(--text-dim); cursor: pointer; padding: 4px; font-size: 16px; }
+        .record-delete:hover { color: var(--accent); }
+
+        .income-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+
+        .income-type {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+            padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.2s; font-size: 12px;
+        }
+
+        .income-type.selected { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+        .income-type .icon { font-size: 20px; margin-bottom: 4px; }
+
+        .timeline { position: relative; padding-left: 24px; }
+
+        .timeline::before {
+            content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+            width: 2px; background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative; margin-bottom: 20px; padding: 16px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .timeline-item::before {
+            content: ''; position: absolute; left: -20px; top: 20px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--primary); border: 2px solid var(--bg);
+        }
+
+        .timeline-item.done::before { background: var(--success); }
+        .timeline-item.current::before { background: var(--warning); animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(245,158,11,0); }
+        }
+
+        .timeline-date { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--primary-light); margin-bottom: 4px; }
+        .timeline-target { font-size: 18px; font-weight: 700; font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+        .timeline-desc { font-size: 12px; color: var(--text-muted); }
+        .timeline-actual { font-size: 12px; color: var(--success-light); margin-top: 4px; }
+
+        .actual-input-group { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+        .actual-input-group .form-input { flex: 1; padding: 8px 12px; font-size: 13px; }
+        .actual-input-group .btn-small { flex-shrink: 0; }
+
+        .section-head {
+            font-size: 14px; font-weight: 600; color: var(--text-muted);
+            margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+        .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+        .empty-state .text { font-size: 14px; }
+
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            z-index: 200; justify-content: center; align-items: flex-end;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--surface); border-radius: 20px 20px 0 0;
+            width: 100%; max-width: 500px; padding: 24px;
+            animation: slideUp 0.3s ease; max-height: 80vh; overflow-y: auto;
+        }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-handle { width: 40px; height: 4px; background: var(--text-dim); border-radius: 2px; margin: 0 auto 20px; }
+        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+
+        .toast {
+            position: fixed; top: 70px; left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--surface3); color: var(--text);
+            padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500;
+            z-index: 300; transition: transform 0.3s ease; border: 1px solid var(--border);
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        .sync-textarea {
+            width: 100%; height: 120px; background: var(--surface2);
+            border: 1px solid var(--border); border-radius: 10px;
+            color: var(--text); font-size: 11px; font-family: 'DM Mono', monospace;
+            padding: 12px; resize: none; outline: none;
+        }
+
+        .sync-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+        .sync-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.8; }
+
+        .weekly-day {
+            text-align: center; padding: 8px 2px;
+            background: var(--glass); border-radius: 8px;
+            border: 1px solid transparent; cursor: pointer;
+            transition: all 0.15s; min-height: 60px;
+        }
+
+        .weekly-day:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+<svg width="0" height="0">
+    <defs>
+        <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#6366f1"/>
+            <stop offset="100%" style="stop-color:#f43f5e"/>
+        </linearGradient>
+    </defs>
+</svg>
+
+<header class="app-header">
+    <div class="header-left">
+        <div class="app-title">2026年存款计划</div>
+        <div class="app-date" id="headerDate"></div>
+    </div>
+    <div class="header-right">
+        <button class="sync-btn" onclick="openSync()" title="同步数据">🔄</button>
+        <div class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+            <div class="thumb" id="themeThumb">🌙</div>
+        </div>
+    </div>
+</header>
+
+<div class="toast" id="toast"></div>
+
+<div class="page active" id="page-dashboard">
+    <div class="hero-card">
+        <div class="hero-label">
+            当前存款
+            <button class="reconcile-btn" onclick="openReconcile()">🏦 对账</button>
+        </div>
+        <div class="hero-amount mono" id="totalSaved">¥0</div>
+        <div class="hero-reconcile-time" id="reconcileTime"></div>
+        <div class="hero-target">目标 <span>¥109,000</span> · 剩余 <span id="daysLeft">0</span> 天</div>
+
+        <div class="hero-compare" id="heroCompare">
+            <div class="hero-compare-item">
+                <div class="lbl">理论值</div>
+                <div class="val" id="theoreticalVal">¥0</div>
+            </div>
+            <div class="hero-compare-item">
+                <div class="lbl">实际值</div>
+                <div class="val" id="actualVal">¥0</div>
+            </div>
+            <div class="hero-compare-item">
+                <div class="lbl">差额</div>
+                <div class="val" id="diffVal">--</div>
+            </div>
+        </div>
+
+        <div class="progress-ring-container">
+            <div class="progress-ring-wrapper">
+                <svg class="progress-ring" width="160" height="160" viewBox="0 0 160 160">
+                    <circle class="progress-ring-bg" cx="80" cy="80" r="70" fill="none" stroke-width="10"/>
+                    <circle class="progress-ring-fill" id="ringFill" cx="80" cy="80" r="70" fill="none" stroke-width="10"
+                        stroke-dasharray="439.82" stroke-dashoffset="439.82"/>
+                </svg>
+                <div class="progress-ring-text">
+                    <div class="progress-pct" id="progressPct">0%</div>
+                    <div class="progress-label">完成度</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 本月目标：核心区域 -->
+    <div class="section-head">🎯 本月目标</div>
+    <div class="target-card" id="monthTargetCard"></div>
+
+    <!-- 本周外卖目标 -->
+    <div class="section-head">📅 本周外卖目标</div>
+    <div class="weekly-card" id="weeklyCard"></div>
+
+    <!-- 总览统计 -->
+    <div class="section-head">📊 收入构成</div>
+    <div class="stats-grid">
+        <div class="stat-card green">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value" id="statSalary">¥0</div>
+            <div class="stat-label">工资存款</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-icon">📦</div>
+            <div class="stat-value" id="statSold">¥0</div>
+            <div class="stat-label">二手已售</div>
+        </div>
+        <div class="stat-card yellow">
+            <div class="stat-icon">🛵</div>
+            <div class="stat-value" id="statDelivery">¥0</div>
+            <div class="stat-label">外卖收入</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value" id="statExtra">¥0</div>
+            <div class="stat-label">额外收入</div>
+        </div>
+    </div>
+
+    <div class="section-head">🏦 对账历史</div>
+    <div class="month-card" id="reconcileHistory"></div>
+</div>
+
+<div class="page" id="page-items">
+    <div class="summary-bar">
+        <div class="summary-row">
+            <span class="summary-label">总标价</span>
+            <span class="summary-val mono" id="itemsTotal">¥25,740</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">已售金额</span>
+            <span class="summary-val mono" style="color:var(--success-light)" id="itemsSoldAmount">¥0</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">进度</span>
+            <span class="summary-val" id="itemsProgress">0/25</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="itemsProgressFill" style="width:0%"></div>
+        </div>
+    </div>
+
+    <div class="section-head">物品清单（点击标记售出 / 长按编辑价格）</div>
+    <div style="margin-bottom:12px">
+        <button class="btn btn-primary btn-small" onclick="openAddItem()">+ 添加物品</button>
+    </div>
+    <div id="itemsList"></div>
+</div>
+
+<div class="page" id="page-delivery">
+    <div class="month-card">
+        <div class="month-header">
+            <div class="month-title">外卖收入统计</div>
+        </div>
+        <div class="month-details" style="grid-template-columns:repeat(2,1fr)">
+            <div class="month-detail">
+                <div class="val" style="color:var(--success-light)" id="deliveryTotal">¥0</div>
+                <div class="lbl">累计收入</div>
+            </div>
+            <div class="month-detail">
+                <div class="val" style="color:var(--warning-light)">¥19,425</div>
+                <div class="lbl">目标收入</div>
+            </div>
+        </div>
+        <div class="progress-bar-container" style="margin-top:12px">
+            <div class="progress-bar-fill" id="deliveryProgressFill" style="width:0%"></div>
+        </div>
+    </div>
+
+    <div class="section-head">记录收入</div>
+    <div class="delivery-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">日期</label>
+                <input type="date" class="form-input" id="deliveryDate">
+            </div>
+            <div class="form-group">
+                <label class="form-label">收入（元）</label>
+                <input type="number" class="form-input" id="deliveryAmount" placeholder="0">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">单量</label>
+                <input type="number" class="form-input" id="deliveryOrders" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">时长（小时）</label>
+                <input type="number" class="form-input" id="deliveryHours" placeholder="0" step="0.5">
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="addDelivery()">记录收入</button>
+    </div>
+
+    <div class="section-head">历史记录</div>
+    <div id="deliveryRecords"></div>
+</div>
+
+<div class="page" id="page-extra">
+    <div class="month-card" id="gapDetail"></div>
+
+    <div class="summary-bar">
+        <div class="summary-row">
+            <span class="summary-label">累计额外收入</span>
+            <span class="summary-val mono" style="color:var(--success-light)" id="extraTotal">¥0</span>
+        </div>
+    </div>
+
+    <div class="section-head">记录额外收入</div>
+    <div class="delivery-form">
+        <div class="form-group">
+            <label class="form-label">来源</label>
+            <div class="income-type-grid" id="incomeTypes">
+                <div class="income-type selected" data-type="闲鱼" onclick="selectIncomeType(this)">
+                    <div class="icon">🐟</div>
+                    <div>闲鱼</div>
+                </div>
+                <div class="income-type" data-type="得物" onclick="selectIncomeType(this)">
+                    <div class="icon">👟</div>
+                    <div>得物</div>
+                </div>
+                <div class="income-type" data-type="闪送" onclick="selectIncomeType(this)">
+                    <div class="icon">🏃</div>
+                    <div>闪送</div>
+                </div>
+                <div class="income-type" data-type="临时工" onclick="selectIncomeType(this)">
+                    <div class="icon">👷</div>
+                    <div>临时工</div>
+                </div>
+                <div class="income-type" data-type="摆摊" onclick="selectIncomeType(this)">
+                    <div class="icon">🏪</div>
+                    <div>摆摊</div>
+                </div>
+                <div class="income-type" data-type="其他" onclick="selectIncomeType(this)">
+                    <div class="icon">💡</div>
+                    <div>其他</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">日期</label>
+                <input type="date" class="form-input" id="extraDate">
+            </div>
+            <div class="form-group">
+                <label class="form-label">金额（元）</label>
+                <input type="number" class="form-input" id="extraAmount" placeholder="0">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">备注</label>
+            <input type="text" class="form-input" id="extraNote" placeholder="可选">
+        </div>
+        <button class="btn btn-primary" onclick="addExtra()">记录收入</button>
+    </div>
+
+    <div class="section-head">历史记录</div>
+    <div id="extraRecords"></div>
+</div>
+
+<div class="page" id="page-timeline">
+    <div class="section-head">存款目标时间线</div>
+    <div class="timeline" id="timeline"></div>
+</div>
+
+<nav class="tab-bar">
+    <div class="tab-item active" onclick="switchTab('dashboard', this)">
+        <div class="tab-icon">📊</div>
+        <div class="tab-label">仪表盘</div>
+    </div>
+    <div class="tab-item" onclick="switchTab('items', this)">
+        <div class="tab-icon">📦</div>
+        <div class="tab-label">二手</div>
+    </div>
+    <div class="tab-item" onclick="switchTab('delivery', this)">
+        <div class="tab-icon">🛵</div>
+        <div class="tab-label">外卖</div>
+    </div>
+    <div class="tab-item" onclick="switchTab('extra', this)">
+        <div class="tab-icon">💰</div>
+        <div class="tab-label">额外</div>
+    </div>
+    <div class="tab-item" onclick="switchTab('timeline', this)">
+        <div class="tab-icon">📅</div>
+        <div class="tab-label">时间线</div>
+    </div>
+</nav>
+
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+const PLAN = {
+    target: 109000,
+    existingSavings: 16100,
+    monthlySalarySave: 4500,
+    electricCost: 1800,
+    monthlyReserve: 1000,
+    deliveryTarget: 19425,
+    extraTarget: 5822,
+    payDay: 20,
+    months: [
+        { key: '2026-04', label: '4月', deliveryTarget: 675, salaryTarget: 4500, note: '试运行，外卖减半' },
+        { key: '2026-05', label: '5月', deliveryTarget: 1350, salaryTarget: 4500, note: '新手期' },
+        { key: '2026-06', label: '6月', deliveryTarget: 1800, salaryTarget: 4500, note: '适应期，二手清完' },
+        { key: '2026-07', label: '7月', deliveryTarget: 1800, salaryTarget: 4500, note: '适应期' },
+        { key: '2026-08', label: '8月', deliveryTarget: 2250, salaryTarget: 4500, note: '熟练期' },
+        { key: '2026-09', label: '9月', deliveryTarget: 2250, salaryTarget: 4500, note: '熟练期' },
+        { key: '2026-10', label: '10月', deliveryTarget: 2250, salaryTarget: 4500, note: '熟练期' },
+        { key: '2026-11', label: '11月', deliveryTarget: 2250, salaryTarget: 4500, note: '熟练期' },
+        { key: '2026-12', label: '12月', deliveryTarget: 2250, salaryTarget: 4500, note: '熟练期' },
+        { key: '2027-01', label: '1月', deliveryTarget: 2250, salaryTarget: 4500, note: '最后冲刺' },
+    ],
+    items: [
+        { name: '投影仪', price: 4300, sold: false, soldPrice: 0 },
+        { name: '平板', price: 2100, sold: true, soldPrice: 1900 },
+        { name: '平板', price: 2300, sold: false, soldPrice: 0 },
+        { name: '大平板', price: 1500, sold: false, soldPrice: 0 },
+        { name: '平板笔', price: 200, sold: false, soldPrice: 0 },
+        { name: 'VR眼镜', price: 2600, sold: false, soldPrice: 0 },
+        { name: '电脑', price: 4000, sold: false, soldPrice: 0 },
+        { name: '大疆', price: 2400, sold: false, soldPrice: 0 },
+        { name: '电子书', price: 650, sold: false, soldPrice: 0 },
+        { name: '笔记本电脑', price: 600, sold: false, soldPrice: 0 },
+        { name: 'AI眼镜', price: 1000, sold: true, soldPrice: 900 },
+        { name: '大洗地机', price: 400, sold: false, soldPrice: 0 },
+        { name: '扫地机器人', price: 100, sold: false, soldPrice: 0 },
+        { name: '扫地机器人', price: 100, sold: false, soldPrice: 0 },
+        { name: '洗地机', price: 50, sold: false, soldPrice: 0 },
+        { name: '吸尘器', price: 200, sold: false, soldPrice: 0 },
+        { name: '小米音箱白', price: 80, sold: true, soldPrice: 80 },
+        { name: '小米音箱黑', price: 50, sold: false, soldPrice: 0 },
+        { name: '索尼耳机', price: 350, sold: false, soldPrice: 0 },
+        { name: '索尼耳机', price: 350, sold: false, soldPrice: 0 },
+        { name: '小米耳机', price: 600, sold: false, soldPrice: 0 },
+        { name: 'OPPO耳机', price: 250, sold: false, soldPrice: 0 },
+        { name: '电脑音响', price: 70, sold: false, soldPrice: 0 },
+        { name: '狼途键盘', price: 120, sold: false, soldPrice: 0 },
+        { name: '蓝牙键盘', price: 20, sold: false, soldPrice: 0 },
+        { name: '手表1', price: 750, sold: false, soldPrice: 0 },
+        { name: '手表2', price: 750, sold: false, soldPrice: 0 },
+        { name: '手表3', price: 750, sold: false, soldPrice: 0 },
+        { name: '手表4', price: 400, sold: false, soldPrice: 0 },
+    ],
+    deliveryRecords: [
+        { id: 'mrqj2jm05gdcf', date: '2026-07-17', amount: 912, orders: 0, hours: 0 },
+    ],
+    extraRecords: [],
+    monthlyActuals: { '6月底': 30000 },
+    reconciliations: [
+        { id: 'mrqgionq02i7f', date: '2026-07-18', time: '22:23', balance: 30000, note: '' },
+        { id: 'mrqj3b7qjtutg', date: '2026-07-18', time: '23:35', balance: 30900, note: '' },
+    ],
+    deliveryRates: {
+        weekdayAvg: 35,     // 周一~周四 晚上2h
+        weekendAvg: 100,    // 周五~周六 晚上3-4h
+        sundayAvg: 35,      // 周日 晚上2h
+        morningWeekend: 100, // 周六日上午加跑4h
+    },
+    schedule: [1, 3, 5, 6, 0], // 默认跑单日: 周一、三、五、六、日 (0=周日)
+    weekendMorningDays: [6, 0], // 周六日上午加跑
+    weekPlan: {},
+    theme: 'dark',
+};
+
+// ============ 工具函数 ============
+
+function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+
+function loadData() {
+    const saved = localStorage.getItem('savingsPlan');
+    if (saved) {
+        try {
+            const data = JSON.parse(saved);
+            if (data.items) PLAN.items = data.items;
+            if (data.deliveryRecords) PLAN.deliveryRecords = data.deliveryRecords;
+            if (data.extraRecords) PLAN.extraRecords = data.extraRecords;
+            if (data.monthlyActuals) PLAN.monthlyActuals = data.monthlyActuals;
+            if (data.reconciliations) PLAN.reconciliations = data.reconciliations;
+            if (data.deliveryRates) PLAN.deliveryRates = data.deliveryRates;
+            if (data.schedule) PLAN.schedule = data.schedule;
+            if (data.weekendMorningDays) PLAN.weekendMorningDays = data.weekendMorningDays;
+            if (data.weekPlan) PLAN.weekPlan = data.weekPlan;
+            if (data.theme) PLAN.theme = data.theme;
+            PLAN.deliveryRecords.forEach(r => { if (!r.id) r.id = genId(); });
+            PLAN.extraRecords.forEach(r => { if (!r.id) r.id = genId(); });
+            PLAN.reconciliations.forEach(r => { if (!r.id) r.id = genId(); });
+        } catch(e) { console.error('数据加载失败', e); }
+    }
+}
+
+function saveData() {
+    localStorage.setItem('savingsPlan', JSON.stringify({
+        items: PLAN.items,
+        deliveryRecords: PLAN.deliveryRecords,
+        extraRecords: PLAN.extraRecords,
+        monthlyActuals: PLAN.monthlyActuals,
+        reconciliations: PLAN.reconciliations,
+        deliveryRates: PLAN.deliveryRates,
+        schedule: PLAN.schedule,
+        weekendMorningDays: PLAN.weekendMorningDays,
+        weekPlan: PLAN.weekPlan,
+        theme: PLAN.theme,
+    }));
+}
+
+function exportData() {
+    return JSON.stringify({
+        items: PLAN.items,
+        deliveryRecords: PLAN.deliveryRecords,
+        extraRecords: PLAN.extraRecords,
+        monthlyActuals: PLAN.monthlyActuals,
+        reconciliations: PLAN.reconciliations,
+        deliveryRates: PLAN.deliveryRates,
+        schedule: PLAN.schedule,
+        weekendMorningDays: PLAN.weekendMorningDays,
+        weekPlan: PLAN.weekPlan,
+        theme: PLAN.theme,
+        exportTime: new Date().toISOString(),
+    });
+}
+
+function importData(jsonStr) {
+    try {
+        const data = JSON.parse(jsonStr);
+        if (!data.items) throw new Error('数据格式错误');
+
+        const existingDeliveryIds = new Set(PLAN.deliveryRecords.map(r => r.id).filter(Boolean));
+        const existingExtraIds = new Set(PLAN.extraRecords.map(r => r.id).filter(Boolean));
+        const existingReconcileIds = new Set(PLAN.reconciliations.map(r => r.id).filter(Boolean));
+
+        const importedItems = data.items || [];
+        importedItems.forEach((impItem, i) => {
+            if (i < PLAN.items.length) {
+                if (impItem.sold && !PLAN.items[i].sold) {
+                    PLAN.items[i].sold = true;
+                    PLAN.items[i].soldPrice = impItem.soldPrice || 0;
+                }
+            }
+        });
+
+        if (data.deliveryRecords) {
+            data.deliveryRecords.forEach(r => {
+                if (!r.id) r.id = genId();
+                if (existingDeliveryIds.has(r.id)) return;
+                PLAN.deliveryRecords.push(r);
+            });
+        }
+
+        if (data.extraRecords) {
+            data.extraRecords.forEach(r => {
+                if (!r.id) r.id = genId();
+                if (existingExtraIds.has(r.id)) return;
+                PLAN.extraRecords.push(r);
+            });
+        }
+
+        if (data.reconciliations) {
+            data.reconciliations.forEach(r => {
+                if (!r.id) r.id = genId();
+                if (existingReconcileIds.has(r.id)) return;
+                PLAN.reconciliations.push(r);
+            });
+        }
+
+        if (data.monthlyActuals) Object.assign(PLAN.monthlyActuals, data.monthlyActuals);
+        if (data.deliveryRates) Object.assign(PLAN.deliveryRates, data.deliveryRates);
+        if (data.schedule) PLAN.schedule = data.schedule;
+        if (data.weekendMorningDays) PLAN.weekendMorningDays = data.weekendMorningDays;
+        if (data.weekPlan) Object.assign(PLAN.weekPlan, data.weekPlan);
+        if (data.theme) PLAN.theme = data.theme;
+
+        saveData();
+        applyTheme();
+        renderAll();
+        toast('数据合并导入成功！');
+        return true;
+    } catch(e) {
+        toast('导入失败：数据格式错误');
+        return false;
+    }
+}
+
+function openSync() {
+    document.getElementById('modalTitle').textContent = '数据同步';
+    document.getElementById('modalContent').innerHTML = `
+        <div class="sync-desc">
+            数据保存在本设备的浏览器中，不同设备之间不会自动同步。<br>
+            导入会自动合并，不会覆盖已有数据。
+        </div>
+        <label class="form-label">导出数据</label>
+        <textarea class="sync-textarea" id="syncExport" readonly onclick="this.select()">${exportData()}</textarea>
+        <div class="sync-actions">
+            <button class="btn btn-primary btn-small" onclick="copyExport()">📋 复制</button>
+            <button class="btn btn-primary btn-small" onclick="downloadExport()">💾 下载</button>
+        </div>
+        <div style="margin-top:20px">
+            <label class="form-label">导入数据</label>
+            <textarea class="sync-textarea" id="syncImport" placeholder="在此粘贴数据..."></textarea>
+            <button class="btn btn-primary" style="margin-top:12px" onclick="doImport()">合并导入</button>
+        </div>
+    `;
+    document.getElementById('modal').classList.add('active');
+}
+
+function copyExport() {
+    const text = document.getElementById('syncExport').value;
+    navigator.clipboard.writeText(text).then(() => toast('已复制')).catch(() => {
+        document.getElementById('syncExport').select();
+        document.execCommand('copy');
+        toast('已复制');
+    });
+}
+
+function downloadExport() {
+    const blob = new Blob([exportData()], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '2026年存款计划_备份_' + today() + '.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('已下载');
+}
+
+function doImport() {
+    const text = document.getElementById('syncImport').value.trim();
+    if (!text) { toast('请粘贴数据'); return; }
+    importData(text);
+    closeModal();
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+function fmt(n) { return '¥' + Math.round(n).toLocaleString('zh-CN'); }
+
+function today() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function nowTime() {
+    const d = new Date();
+    return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+function getCurrentMonth() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
+function getMonthKey(dateStr) { return dateStr.substring(0, 7); }
+
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function toggleTheme() {
+    PLAN.theme = PLAN.theme === 'dark' ? 'light' : 'dark';
+    applyTheme();
+    saveData();
+}
+
+function applyTheme() {
+    if (PLAN.theme === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeThumb').textContent = '☀️';
+    } else {
+        document.body.classList.remove('light-mode');
+        document.getElementById('themeThumb').textContent = '🌙';
+    }
+}
+
+function calcSoldAmount() {
+    return PLAN.items.reduce((sum, item) => {
+        if (!item.sold) return sum;
+        return sum + (item.soldPrice > 0 ? item.soldPrice : Math.round(item.price * 0.95));
+    }, 0);
+}
+
+function calcDeliveryTotal() { return PLAN.deliveryRecords.reduce((sum, r) => sum + r.amount, 0); }
+function calcExtraTotal() { return PLAN.extraRecords.reduce((sum, r) => sum + r.amount, 0); }
+
+function calcSalarySaved() {
+    const start = new Date('2026-04-01');
+    const now = new Date();
+    let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+    if (now.getDate() >= PLAN.payDay) months += 1;
+    return Math.max(0, Math.min(months, 10)) * PLAN.monthlySalarySave;
+}
+
+function calcTheoretical() {
+    return PLAN.existingSavings + calcSalarySaved() + calcSoldAmount() + calcDeliveryTotal() + calcExtraTotal();
+}
+
+function getReconciledBalance() {
+    if (PLAN.reconciliations.length === 0) return null;
+    return [...PLAN.reconciliations].sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time))[0].balance;
+}
+
+function getLastReconcile() {
+    if (PLAN.reconciliations.length === 0) return null;
+    return [...PLAN.reconciliations].sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time))[0];
+}
+
+function getDisplayBalance() {
+    const reconciled = getReconciledBalance();
+    return reconciled !== null ? reconciled : calcTheoretical();
+}
+
+function calcDaysLeft() {
+    return Math.max(0, Math.ceil((new Date('2027-01-31') - new Date()) / (1000 * 60 * 60 * 24)));
+}
+
+function getMonthDeliveryActual(monthKey) {
+    return PLAN.deliveryRecords.filter(r => getMonthKey(r.date) === monthKey).reduce((sum, r) => sum + r.amount, 0);
+}
+
+function getMonthExtraActual(monthKey) {
+    return PLAN.extraRecords.filter(r => getMonthKey(r.date) === monthKey).reduce((sum, r) => sum + r.amount, 0);
+}
+
+// 计算已完成月份的外卖缺口累计
+// 本周的外卖实际收入
+function getWeekDeliveryActual(monthKey) {
+    const now = new Date();
+    const day = now.getDate();
+    const weekStart = Math.floor((day - 1) / 7) * 7 + 1;
+    const weekEnd = Math.min(weekStart + 6, new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate());
+    const prefix = monthKey + '-';
+    return PLAN.deliveryRecords
+        .filter(r => r.date.startsWith(prefix))
+        .filter(r => {
+            const d = parseInt(r.date.split('-')[2]);
+            return d >= weekStart && d <= weekEnd;
+        })
+        .reduce((sum, r) => sum + r.amount, 0);
+}
+
+// ============ 对账功能 ============
+
+function openReconcile() {
+    const last = getLastReconcile();
+    document.getElementById('modalTitle').textContent = '🏦 对账';
+    document.getElementById('modalContent').innerHTML = `
+        <div class="sync-desc">
+            查看你的银行/支付宝/微信余额，填入真实数字。<br>
+            随时可以对账，不限月底。
+        </div>
+        <div class="form-group">
+            <label class="form-label">当前实际余额（元）</label>
+            <input type="number" class="form-input" id="reconcileBalance" placeholder="输入真实余额" value="${last ? last.balance : ''}">
+        </div>
+        <div class="form-group">
+            <label class="form-label">备注（可选）</label>
+            <input type="text" class="form-input" id="reconcileNote" placeholder="比如：刚发了工资" value="">
+        </div>
+        ${last ? `<div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">上次：${last.date} ${last.time} · ${fmt(last.balance)}</div>` : ''}
+        <button class="btn btn-primary" onclick="doReconcile()">确认对账</button>
+    `;
+    document.getElementById('modal').classList.add('active');
+    setTimeout(() => document.getElementById('reconcileBalance')?.focus(), 300);
+}
+
+function doReconcile() {
+    const balance = parseFloat(document.getElementById('reconcileBalance').value);
+    if (isNaN(balance)) { toast('请输入有效金额'); return; }
+    PLAN.reconciliations.push({
+        id: genId(), date: today(), time: nowTime(),
+        balance: balance,
+        note: document.getElementById('reconcileNote').value.trim(),
+    });
+    saveData();
+    closeModal();
+    renderAll();
+    toast(`对账完成：${fmt(balance)}`);
+}
+
+function deleteReconcile(id) {
+    PLAN.reconciliations = PLAN.reconciliations.filter(r => r.id !== id);
+    saveData();
+    renderAll();
+    toast('已删除');
+}
+
+// ============ 仪表盘渲染 ============
+
+function renderDashboard() {
+    const theoretical = calcTheoretical();
+    const reconciled = getReconciledBalance();
+    const display = getDisplayBalance();
+    const pct = Math.min(100, (display / PLAN.target) * 100);
+    const circumference = 2 * Math.PI * 70;
+    const offset = circumference - (Math.min(pct, 100) / 100) * circumference;
+
+    document.getElementById('totalSaved').textContent = fmt(display);
+    document.getElementById('daysLeft').textContent = calcDaysLeft();
+    document.getElementById('progressPct').textContent = pct.toFixed(1) + '%';
+    document.getElementById('ringFill').style.strokeDashoffset = Math.max(0, offset);
+
+    const lastReconcile = getLastReconcile();
+    document.getElementById('reconcileTime').textContent = lastReconcile
+        ? `上次对账：${lastReconcile.date} ${lastReconcile.time}`
+        : '尚未对账（显示理论值）';
+
+    const compareEl = document.getElementById('heroCompare');
+    if (reconciled !== null) {
+        const diff = reconciled - theoretical;
+        compareEl.style.display = 'flex';
+        document.getElementById('theoreticalVal').textContent = fmt(theoretical);
+        document.getElementById('actualVal').textContent = fmt(reconciled);
+        const diffEl = document.getElementById('diffVal');
+        diffEl.textContent = diff >= 0 ? '+' + fmt(diff) : fmt(diff);
+        diffEl.style.color = diff >= 0 ? 'var(--success-light)' : 'var(--accent-light)';
+    } else {
+        compareEl.style.display = 'none';
+    }
+
+    // 统计卡片
+    document.getElementById('statSalary').textContent = fmt(calcSalarySaved());
+    document.getElementById('statSold').textContent = fmt(calcSoldAmount());
+    document.getElementById('statDelivery').textContent = fmt(calcDeliveryTotal());
+    document.getElementById('statExtra').textContent = fmt(calcExtraTotal());
+
+    // 本月目标卡
+    renderMonthTarget();
+
+    // 本周目标
+    renderWeekly();
+
+    // 对账历史
+    renderReconcileHistory();
+}
+
+function renderMonthTarget() {
+    const container = document.getElementById('monthTargetCard');
+    const currentMonth = getCurrentMonth();
+    const monthInfo = PLAN.months.find(m => m.key === currentMonth);
+    const display = getDisplayBalance();
+
+    if (!monthInfo) {
+        container.innerHTML = '<div class="empty-state" style="padding:20px"><div class="text">当前不在计划周期内</div></div>';
+        return;
+    }
+
+    const now = new Date();
+    const dayOfMonth = now.getDate();
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const daysLeft = daysInMonth - dayOfMonth;
+
+    const monthSalary = PLAN.monthlySalarySave; // 目标始终是4500
+ // 20号后才算已存
+    // 按跑单计划算：每周¥505，每天¥72.14（完整月）
+    const dailyDelivery = 505 / 7;
+    const monthDeliveryTarget = Math.round(dailyDelivery * daysInMonth);
+    const monthDeliveryActual = getMonthDeliveryActual(currentMonth);
+    const monthExtraActual = getMonthExtraActual(currentMonth);
+
+    // 本月需要存的总额 = 工资 + 外卖目标
+    const monthTotalTarget = monthSalary + monthDeliveryTarget;
+    // 已存 = 工资(看是否到发薪日) + 外卖实际 + 额外实际
+    const salaryEarned = dayOfMonth >= PLAN.payDay ? monthSalary : 0;
+    const monthTotalActual = salaryEarned + monthDeliveryActual + monthExtraActual;
+    const monthRemain = Math.max(0, monthTotalTarget - monthTotalActual);
+
+    // 外卖还差
+    const deliveryRemain = Math.max(0, monthDeliveryTarget - monthDeliveryActual);
+    // 如果外卖没跑够，额外收入先补外卖缺口；剩余的额外收入补总缺口
+    const extraUsedForDelivery = Math.min(monthExtraActual, deliveryRemain);
+    const extraRemaining = monthExtraActual - extraUsedForDelivery;
+    const actualDeliveryGap = Math.max(0, deliveryRemain - extraUsedForDelivery);
+
+    const overallPct = Math.min(100, (monthTotalActual / monthTotalTarget) * 100);
+
+    const salaryDone = dayOfMonth >= PLAN.payDay;
+
+    container.innerHTML = `
+        <div class="target-hero">
+            <div class="target-hero-label">${monthInfo.label} 需存</div>
+            <div class="target-hero-amount" style="color:${monthRemain > 0 ? 'var(--warning-light)' : 'var(--success-light)'}">
+                ${monthRemain > 0 ? fmt(monthRemain) : '✅ 已完成'}
+            </div>
+            <div class="target-hero-sub">
+                目标 ${fmt(monthTotalTarget)} · 已存 ${fmt(monthTotalActual)} · ${daysLeft > 0 ? '还剩 ' + daysLeft + ' 天' : '本月结束'}
+            </div>
+
+
+        </div>
+
+        <div class="progress-bar-container" style="height:10px">
+            <div class="progress-bar-fill ${overallPct >= 100 ? 'over' : ''}" style="width:${overallPct}%"></div>
+        </div>
+
+        <div class="target-breakdown">
+            <div class="target-row ${salaryDone ? 'target-row-done' : ''}">
+                <div class="target-row-icon">💰</div>
+                <div class="target-row-info">
+                    <div class="target-row-label">工资存款</div>
+                    <div class="target-row-detail">${salaryDone ? '✅ 已到手' : '⏳ 未到手（' + PLAN.payDay + '号发薪）'}</div>
+                </div>
+                <div class="target-row-amount">
+                    <div class="target" style="color:${salaryDone ? 'var(--success-light)' : 'var(--text-muted)'}">${fmt(monthSalary)}</div>
+                    <div class="actual">${salaryDone ? '已计入' : '未计入'}</div>
+                </div>
+            </div>
+
+            <div class="target-row ${deliveryRemain <= 0 ? 'target-row-done' : ''}">
+                <div class="target-row-icon">🛵</div>
+                <div class="target-row-info">
+                    <div class="target-row-label">外卖收入</div>
+                    <div class="target-row-detail">
+                        ${deliveryRemain > 0
+                            ? `目标 ${fmt(monthDeliveryTarget)} · 已跑 ${fmt(monthDeliveryActual)} · 还差 ${fmt(deliveryRemain)}`
+                            : `目标 ${fmt(monthDeliveryTarget)} · 已跑 ${fmt(monthDeliveryActual)} · 超额 ${fmt(monthDeliveryActual - monthDeliveryTarget)}`
+                        }
+                    </div>
+                </div>
+                <div class="target-row-amount">
+                    <div class="target" style="color:${deliveryRemain > 0 ? 'var(--warning-light)' : 'var(--success-light)'}">
+                        ${deliveryRemain > 0 ? fmt(deliveryRemain) : '✅'}
+                    </div>
+                    <div class="actual">还差</div>
+                </div>
+            </div>
+
+            ${(() => {
+                const remainingMonths = PLAN.months.filter(m => m.key >= currentMonth).length;
+                const futureSalary = remainingMonths * PLAN.monthlySalarySave;
+                const futureDelivery = PLAN.months.filter(m => m.key >= currentMonth).reduce((s, m) => {
+                    const y = parseInt(m.key.split('-')[0]);
+                    const mo = parseInt(m.key.split('-')[1]);
+                    return s + Math.round((505/7) * new Date(y, mo, 0).getDate());
+                }, 0);
+                const unsoldValue = PLAN.items.filter(i => !i.sold).reduce((s, i) => s + Math.round(i.price * 0.95), 0);
+                const extraActual = calcExtraTotal();
+                const projected = display + futureSalary + futureDelivery + unsoldValue + extraActual;
+                const gap = Math.max(0, PLAN.target - projected);
+                const gapPerMonth = remainingMonths > 0 ? Math.ceil(gap / remainingMonths) : 0;
+                return gap > 0 ? `
+            <div class="target-row">
+                <div class="target-row-icon">🎯</div>
+                <div class="target-row-info">
+                    <div class="target-row-label">额外收入目标</div>
+                    <div class="target-row-detail">本月额外需 ${fmt(gapPerMonth)} · 已赚 ${fmt(extraActual)}</div>
+                </div>
+                <div class="target-row-amount">
+                    <div class="target" style="color:var(--warning-light)">${fmt(gapPerMonth)}</div>
+                    <div class="actual">/月</div>
+                </div>
+            </div>` : '';
+            })()}
+        </div>
+    `;
+}
+
+// 获取周 key，格式 2026-W29
+function getWeekKey(date) {
+    const d = new Date(date);
+    const jan1 = new Date(d.getFullYear(), 0, 1);
+    const weekNum = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+    return d.getFullYear() + '-W' + String(weekNum).padStart(2, '0');
+}
+
+// 获取某天是周几（0=周日，1=周一...6=周六）
+function getDayOfWeek(year, month, day) {
+    return new Date(year, month - 1, day).getDay();
+}
+
+// 获取某天的预期收入（含上午加跑）
+function getDayExpectedIncome(year, month, day) {
+    const dow = getDayOfWeek(year, month, day);
+    const rates = Object.assign({ weekdayAvg: 35, weekendAvg: 100, sundayAvg: 35, morningWeekend: 100 }, PLAN.deliveryRates);
+    let income = 0;
+    // 晚上收入
+    if (dow === 5 || dow === 6) income += rates.weekendAvg;
+    else if (dow === 0) income += rates.sundayAvg;
+    else income += rates.weekdayAvg;
+    // 上午加跑（周六、周日）
+    if ((PLAN.weekendMorningDays || [6, 0]).includes(dow)) {
+        income += rates.morningWeekend;
+    }
+    return income;
+}
+
+function renderWeekly() {
+    const container = document.getElementById('weeklyCard');
+    const currentMonth = getCurrentMonth();
+    const monthInfo = PLAN.months.find(m => m.key === currentMonth);
+
+    if (!monthInfo) {
+        container.innerHTML = '<div class="empty-state" style="padding:20px"><div class="text">当前不在计划周期内</div></div>';
+        return;
+    }
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const dayOfMonth = now.getDate();
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const dailyDelivery = 505 / 7;
+    const monthDeliveryTarget = Math.round(dailyDelivery * daysInMonth);
+    const monthDeliveryActual = getMonthDeliveryActual(currentMonth);
+    const monthDeliveryRemain = Math.max(0, monthDeliveryTarget - monthDeliveryActual);
+
+    // 本周范围（周一~周日）
+    const todayDow = now.getDay();
+    const weekStart = dayOfMonth - (todayDow === 0 ? 6 : todayDow - 1);
+    const weekEnd = Math.min(weekStart + 6, daysInMonth);
+    const actualWeekStart = Math.max(1, weekStart);
+
+    // 本周计划
+    const weekKey = getWeekKey(now);
+    let plannedDays = PLAN.weekPlan[weekKey];
+    if (!plannedDays || plannedDays.length === 0) {
+        plannedDays = [];
+        for (let d = actualWeekStart; d <= weekEnd; d++) {
+            if (d < dayOfMonth) continue;
+            const dow = getDayOfWeek(year, month, d);
+            if (PLAN.schedule.includes(dow)) plannedDays.push(d);
+        }
+        PLAN.weekPlan[weekKey] = plannedDays;
+    }
+
+    // 本周已跑
+    const prefix = currentMonth + '-';
+    const thisWeekActual = PLAN.deliveryRecords
+        .filter(r => r.date.startsWith(prefix))
+        .filter(r => { const d = parseInt(r.date.split('-')[2]); return d >= actualWeekStart && d <= weekEnd; })
+        .reduce((sum, r) => sum + r.amount, 0);
+
+    // 本周计划收入（未来天）
+    let weekPlannedFuture = 0;
+    for (let d = Math.max(actualWeekStart, dayOfMonth); d <= weekEnd; d++) {
+        if (plannedDays.includes(d)) weekPlannedFuture += getDayExpectedIncome(year, month, d);
+    }
+    const weekTotal = thisWeekActual + weekPlannedFuture;
+
+    // 今日信息
+    const todayExpected = getDayExpectedIncome(year, month, dayOfMonth);
+    const todayDateStr = currentMonth + '-' + String(dayOfMonth).padStart(2, '0');
+    const todayActual = PLAN.deliveryRecords.filter(r => r.date === todayDateStr).reduce((s, r) => s + r.amount, 0);
+    const todayIsPlanned = plannedDays.includes(dayOfMonth);
+    const todayDowName = ['周日','周一','周二','周三','周四','周五','周六'][todayDow];
+
+    // 本月剩余天数
+    const daysLeftInMonth = daysInMonth - dayOfMonth + 1;
+
+    // 本周剩余天数
+    const daysLeftInWeek = weekEnd - dayOfMonth + 1;
+
+    // 生成7天格子
+    const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+    let daysHtml = '';
+    for (let d = actualWeekStart; d <= weekEnd; d++) {
+        const dow = getDayOfWeek(year, month, d);
+        const expected = getDayExpectedIncome(year, month, d);
+        const isPast = d < dayOfMonth;
+        const isToday = d === dayOfMonth;
+        const isPlanned = plannedDays.includes(d);
+        const dateStr = currentMonth + '-' + String(d).padStart(2, '0');
+        const dayActual = PLAN.deliveryRecords.filter(r => r.date === dateStr).reduce((s, r) => s + r.amount, 0);
+        const hasActual = dayActual > 0;
+        const hasMorning = (PLAN.weekendMorningDays || [6,0]).includes(dow) && isPlanned;
+
+        let borderColor = 'transparent';
+        let bgColor = 'var(--glass)';
+        let textColor = 'var(--text-dim)';
+        if (isToday) { borderColor = 'var(--primary)'; bgColor = 'rgba(99,102,241,0.1)'; }
+        else if (hasActual) { borderColor = 'var(--success)'; bgColor = 'rgba(16,185,129,0.08)'; }
+        else if (isPlanned) { borderColor = 'var(--warning)'; bgColor = 'rgba(245,158,11,0.08)'; }
+
+        const morningTag = hasMorning ? '<span style="font-size:8px;color:var(--warning-light)">+早</span>' : '';
+        const valueHtml = hasActual ? `<span style="color:var(--success-light)">${fmt(dayActual)}</span>` :
+                          isPlanned ? `<span style="color:var(--warning-light)">~${fmt(expected)}</span>` :
+                          isPast ? '' : `<span style="color:var(--text-dim)">${fmt(expected)}</span>`;
+
+        daysHtml += `
+            <div style="text-align:center;padding:8px 2px;background:${bgColor};border:1px solid ${borderColor};border-radius:8px;cursor:pointer;${isPast && !hasActual ? 'opacity:0.4' : ''}" onclick="togglePlanDay('${weekKey}',${d})">
+                <div style="font-size:10px;color:var(--text-dim)">${dayNames[dow]}${morningTag}</div>
+                <div style="font-size:14px;font-weight:600;margin:3px 0">${d}</div>
+                <div style="font-size:11px;font-family:'DM Mono',monospace">${valueHtml}</div>
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <!-- 本月外卖进度 -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--glass);border-radius:12px;margin-bottom:12px">
+            <div>
+                <div style="font-size:11px;color:var(--text-muted)">本月外卖目标</div>
+                <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace">${fmt(monthDeliveryTarget)}</div>
+            </div>
+            <div>
+                <div style="font-size:11px;color:var(--text-muted)">已跑</div>
+                <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--success-light)">${fmt(monthDeliveryActual)}</div>
+            </div>
+            <div>
+                <div style="font-size:11px;color:var(--text-muted)">还差</div>
+                <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--warning-light)">${fmt(monthDeliveryRemain)}</div>
+            </div>
+            <div>
+                <div style="font-size:11px;color:var(--text-muted)">还剩</div>
+                <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace">${daysLeftInMonth}天</div>
+            </div>
+        </div>
+
+        <!-- 本周概览 -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div>
+                <span style="font-size:12px;color:var(--text-muted)">本周</span>
+                <span style="font-size:18px;font-weight:700;font-family:'DM Mono',monospace;margin-left:6px">${fmt(weekTotal)}</span>
+            </div>
+            <div style="text-align:right">
+                <span style="font-size:12px;color:var(--success-light)">已跑 ${fmt(thisWeekActual)}</span>
+                <span style="font-size:12px;color:var(--text-muted);margin-left:8px">计划 ${daysLeftInWeek}天</span>
+            </div>
+        </div>
+
+        <!-- 7天格子 -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px">
+            ${daysHtml}
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:12px">
+            点击格子切换跑单日 · 🟢已跑 · 🟡计划中 · +早=上午加跑
+        </div>
+
+        <!-- 今日提示 -->
+        ${todayIsPlanned && todayActual === 0 ? `
+        <div style="padding:10px 12px;background:rgba(245,158,11,0.08);border:1px solid var(--warning);border-radius:10px;font-size:12px;color:var(--warning-light)">
+            📌 今天${todayDowName}计划跑单，预计收入 ${fmt(todayExpected)}
+        </div>
+        ` : ''}
+        ${todayActual > 0 ? `
+        <div style="padding:10px 12px;background:rgba(16,185,129,0.08);border:1px solid var(--success);border-radius:10px;font-size:12px;color:var(--success-light)">
+            ✅ 今天已跑 ${fmt(todayActual)}
+        </div>
+        ` : ''}
+    `;
+}
+
+// 切换计划日
+function togglePlanDay(weekKey, day) {
+    if (!PLAN.weekPlan[weekKey]) PLAN.weekPlan[weekKey] = [];
+    const idx = PLAN.weekPlan[weekKey].indexOf(day);
+    if (idx >= 0) PLAN.weekPlan[weekKey].splice(idx, 1);
+    else PLAN.weekPlan[weekKey].push(day);
+    saveData();
+    renderWeekly();
+}
+
+function renderGapDetail() {
+    const container = document.getElementById('gapDetail');
+    if (!container) return;
+    const currentMonth = getCurrentMonth();
+    const display = getDisplayBalance();
+    const remainingMonths = PLAN.months.filter(m => m.key >= currentMonth).length;
+    const futureSalary = remainingMonths * PLAN.monthlySalarySave;
+    const futureDelivery = PLAN.months.filter(m => m.key >= currentMonth).reduce((s, m) => {
+        const y = parseInt(m.key.split('-')[0]);
+        const mo = parseInt(m.key.split('-')[1]);
+        return s + Math.round((505/7) * new Date(y, mo, 0).getDate());
+    }, 0);
+    const unsoldItems = PLAN.items.filter(i => !i.sold);
+    const unsoldValue = unsoldItems.reduce((s, i) => s + Math.round(i.price * 0.95), 0);
+    const extraActual = calcExtraTotal();
+    const projected = display + futureSalary + futureDelivery + unsoldValue + extraActual;
+    const gap = Math.max(0, PLAN.target - projected);
+    const gapPerMonth = remainingMonths > 0 ? Math.ceil(gap / remainingMonths) : 0;
+
+    container.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <span style="font-size:14px;font-weight:600">缺口分析</span>
+            <span style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:${gap > 0 ? 'var(--warning-light)' : 'var(--success-light)'}">${gap > 0 ? fmt(gap) : '✅ 达标'}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">目标</span><span>${fmt(PLAN.target)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">当前余额</span><span>${fmt(display)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">+ 未来工资 (${remainingMonths}月)</span><span style="color:var(--success-light)">+${fmt(futureSalary)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">+ 未来外卖 (${remainingMonths}月)</span><span style="color:var(--success-light)">+${fmt(futureDelivery)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">+ 未售二手 (${unsoldItems.length}件)</span><span style="color:var(--success-light)">+${fmt(unsoldValue)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">+ 已赚额外</span><span style="color:var(--success-light)">+${fmt(extraActual)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding-top:6px;border-top:1px solid var(--border)">
+                <span style="font-weight:600;color:${gap > 0 ? 'var(--warning-light)' : 'var(--success-light)'}">${gap > 0 ? '⚠️ 还差' : '✅ 超出'}</span>
+                <span style="font-weight:700;font-family:'DM Mono',monospace;color:${gap > 0 ? 'var(--warning-light)' : 'var(--success-light)'}">${gap > 0 ? fmt(gap) : fmt(-gap)}</span>
+            </div>
+        </div>
+    `;
+}
+
+function renderReconcileHistory() {
+    const container = document.getElementById('reconcileHistory');
+    if (PLAN.reconciliations.length === 0) {
+        container.innerHTML = '<div class="empty-state" style="padding:20px"><div class="text">还没有对账记录，点击上方「🏦 对账」开始</div></div>';
+        return;
+    }
+
+    const sorted = [...PLAN.reconciliations].sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+    container.innerHTML = sorted.map((r, i) => {
+        const isLatest = i === 0;
+        return `
+            <div class="record-card" style="${isLatest ? 'border-color:var(--primary)' : ''}">
+                <div>
+                    <div class="record-date">${r.date} ${r.time} ${isLatest ? '⭐ 最新' : ''}</div>
+                    ${r.note ? `<div class="record-info"><span>${r.note}</span></div>` : ''}
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <div class="record-amount">${fmt(r.balance)}</div>
+                    <div class="record-delete" onclick="deleteReconcile('${r.id}')">✕</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============ 其他 Tab ============
+
+function renderItems() {
+    const soldCount = PLAN.items.filter(i => i.sold).length;
+    const soldAmount = calcSoldAmount();
+    const totalPrice = PLAN.items.reduce((s, i) => s + i.price, 0);
+
+    document.getElementById('itemsTotal').textContent = fmt(totalPrice);
+    document.getElementById('itemsSoldAmount').textContent = fmt(soldAmount);
+    document.getElementById('itemsProgress').textContent = `${soldCount}/${PLAN.items.length}`;
+    document.getElementById('itemsProgressFill').style.width = (soldCount / PLAN.items.length * 100) + '%';
+
+    const nameTotal = {};
+    PLAN.items.forEach(item => { nameTotal[item.name] = (nameTotal[item.name] || 0) + 1; });
+    const nameIndex = {};
+
+    document.getElementById('itemsList').innerHTML = PLAN.items.map((item, i) => {
+        const defaultPrice = Math.round(item.price * 0.95);
+        const actualPrice = item.soldPrice > 0 ? item.soldPrice : defaultPrice;
+        const hasCustomPrice = item.soldPrice > 0;
+        nameIndex[item.name] = (nameIndex[item.name] || 0) + 1;
+        const showNum = nameTotal[item.name] > 1;
+        const label = showNum ? `${item.name} #${nameIndex[item.name]}` : item.name;
+
+        return `
+            <div class="item-card ${item.sold ? 'sold' : ''}" onclick="toggleItem(${i})" oncontextmenu="event.preventDefault(); editItemPrice(${i})" ontouchstart="startLongPress(${i})" ontouchend="endLongPress()" ontouchmove="endLongPress()">
+                <div class="item-check">${item.sold ? '✓' : ''}</div>
+                <div class="item-info">
+                    <div class="item-name">${label}</div>
+                    <div class="item-price">标价 ¥${item.price} · 折旧 ¥${defaultPrice}</div>
+                    ${item.sold && hasCustomPrice ? `<div class="item-actual-price">实际卖出 ¥${actualPrice}</div>` : ''}
+                </div>
+                <div class="item-amount">${fmt(actualPrice)}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+let longPressTimer = null;
+function startLongPress(index) { longPressTimer = setTimeout(() => editItemPrice(index), 500); }
+function endLongPress() { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } }
+
+function toggleItem(index) {
+    const item = PLAN.items[index];
+    if (item.sold) { item.sold = false; item.soldPrice = 0; toast(`已取消：${item.name}`); }
+    else { item.sold = true; item.soldPrice = Math.round(item.price * 0.95); toast(`已标记售出：${item.name}`); }
+    saveData(); renderItems(); renderDashboard();
+}
+
+function editItemPrice(index) {
+    const item = PLAN.items[index];
+    const defaultPrice = Math.round(item.price * 0.95);
+    document.getElementById('modalTitle').textContent = '编辑卖出价格';
+    document.getElementById('modalContent').innerHTML = `
+        <div class="form-group">
+            <label class="form-label">${item.name}</label>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">标价 ¥${item.price} · 折旧 ¥${defaultPrice}</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">实际卖出价格（元）</label>
+            <input type="number" class="form-input" id="editSoldPrice" value="${item.soldPrice > 0 ? item.soldPrice : defaultPrice}">
+        </div>
+        <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="saveItemPrice(${index})">保存</button>
+            <button class="btn btn-danger btn-small" style="flex:1" onclick="markUnsold(${index})">标记未售</button>
+        </div>
+    `;
+    document.getElementById('modal').classList.add('active');
+}
+
+function saveItemPrice(index) {
+    const price = parseFloat(document.getElementById('editSoldPrice').value);
+    if (isNaN(price) || price < 0) { toast('请输入有效价格'); return; }
+    PLAN.items[index].sold = true; PLAN.items[index].soldPrice = price;
+    saveData(); renderItems(); renderDashboard(); closeModal(); toast('价格已更新');
+}
+
+function markUnsold(index) {
+    PLAN.items[index].sold = false; PLAN.items[index].soldPrice = 0;
+    saveData(); renderItems(); renderDashboard(); closeModal(); toast('已标记未售');
+}
+
+function openAddItem() {
+    document.getElementById('modalTitle').textContent = '添加物品';
+    document.getElementById('modalContent').innerHTML = `
+        <div class="form-group">
+            <label class="form-label">物品名称</label>
+            <input type="text" class="form-input" id="newItemName" placeholder="比如：手表">
+        </div>
+        <div class="form-group">
+            <label class="form-label">标价（元）</label>
+            <input type="number" class="form-input" id="newItemPrice" placeholder="0">
+        </div>
+        <button class="btn btn-primary" onclick="doAddItem()">添加</button>
+    `;
+    document.getElementById('modal').classList.add('active');
+    setTimeout(() => document.getElementById('newItemName')?.focus(), 300);
+}
+
+function doAddItem() {
+    const name = document.getElementById('newItemName').value.trim();
+    const price = parseFloat(document.getElementById('newItemPrice').value);
+    if (!name) { toast('请输入物品名称'); return; }
+    if (isNaN(price) || price <= 0) { toast('请输入有效价格'); return; }
+    PLAN.items.push({ name, price, sold: false, soldPrice: 0 });
+    saveData(); renderItems(); renderDashboard(); closeModal();
+    toast(`已添加：${name} ¥${price}`);
+}
+
+function renderDelivery() {
+    const total = calcDeliveryTotal();
+    document.getElementById('deliveryTotal').textContent = fmt(total);
+    document.getElementById('deliveryProgressFill').style.width = Math.min(100, (total / PLAN.deliveryTarget) * 100) + '%';
+    document.getElementById('deliveryDate').value = today();
+
+    const records = [...PLAN.deliveryRecords].sort((a, b) => b.date.localeCompare(a.date));
+    const container = document.getElementById('deliveryRecords');
+
+    if (records.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon">🛵</div><div class="text">还没有记录，开始跑外卖吧</div></div>';
+        return;
+    }
+
+    container.innerHTML = records.map(r => `
+        <div class="record-card">
+            <div>
+                <div class="record-date">${r.date}</div>
+                <div class="record-info">
+                    ${r.orders ? `<span>${r.orders}单</span>` : ''}
+                    ${r.hours ? `<span>${r.hours}h</span>` : ''}
+                </div>
+            </div>
+            <div class="record-amount">+${fmt(r.amount)}</div>
+            <div class="record-delete" onclick="deleteDelivery('${r.id}')">✕</div>
+        </div>
+    `).join('');
+}
+
+function addDelivery() {
+    const date = document.getElementById('deliveryDate').value;
+    const amount = parseFloat(document.getElementById('deliveryAmount').value) || 0;
+    const orders = parseInt(document.getElementById('deliveryOrders').value) || 0;
+    const hours = parseFloat(document.getElementById('deliveryHours').value) || 0;
+    if (!date || amount <= 0) { toast('请填写日期和金额'); return; }
+    PLAN.deliveryRecords.push({ id: genId(), date, amount, orders, hours });
+    saveData();
+    document.getElementById('deliveryAmount').value = '';
+    document.getElementById('deliveryOrders').value = '';
+    document.getElementById('deliveryHours').value = '';
+    renderDelivery(); renderDashboard(); toast('外卖收入已记录');
+}
+
+function deleteDelivery(id) {
+    PLAN.deliveryRecords = PLAN.deliveryRecords.filter(r => r.id !== id);
+    saveData(); renderDelivery(); renderDashboard(); toast('已删除');
+}
+
+let selectedIncomeType = '闲鱼';
+
+function renderExtra() {
+    const totalEl = document.getElementById('extraTotal');
+    if (totalEl) totalEl.textContent = fmt(calcExtraTotal());
+    const dateInput = document.getElementById('extraDate');
+    if (dateInput) dateInput.value = today();
+
+    const records = [...PLAN.extraRecords].sort((a, b) => b.date.localeCompare(a.date));
+    const container = document.getElementById('extraRecords');
+
+    if (records.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon">💰</div><div class="text">还没有额外收入记录</div></div>';
+        return;
+    }
+
+    const typeIcons = { '闲鱼': '🐟', '得物': '👟', '闪送': '🏃', '临时工': '👷', '摆摊': '🏪', '其他': '💡' };
+    container.innerHTML = records.map(r => `
+        <div class="record-card">
+            <div>
+                <div class="record-date">${r.date} ${typeIcons[r.type] || '💡'} ${r.type}</div>
+                ${r.note ? `<div class="record-info"><span>${r.note}</span></div>` : ''}
+            </div>
+            <div class="record-amount">+${fmt(r.amount)}</div>
+            <div class="record-delete" onclick="deleteExtra('${r.id}')">✕</div>
+        </div>
+    `).join('');
+}
+
+function selectIncomeType(el) {
+    document.querySelectorAll('.income-type').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedIncomeType = el.dataset.type;
+}
+
+function addExtra() {
+    const date = document.getElementById('extraDate').value;
+    const amount = parseFloat(document.getElementById('extraAmount').value) || 0;
+    const note = document.getElementById('extraNote').value;
+    if (!date || amount <= 0) { toast('请填写日期和金额'); return; }
+    PLAN.extraRecords.push({ id: genId(), date, amount, type: selectedIncomeType, note });
+    saveData();
+    document.getElementById('extraAmount').value = '';
+    document.getElementById('extraNote').value = '';
+    renderExtra();
+    renderGapDetail(); renderDashboard(); toast('额外收入已记录');
+}
+
+function deleteExtra(id) {
+    PLAN.extraRecords = PLAN.extraRecords.filter(r => r.id !== id);
+    saveData(); renderExtra(); renderDashboard(); toast('已删除');
+}
+
+function renderTimeline() {
+    const latestReconcile = getReconciledBalance();
+    const display = getDisplayBalance();
+    const currentBalance = display; // 从当前余额开始累计
+
+    // 按跑单计划计算每月外卖收入：每周¥505，每天¥72.14
+    const dailyDelivery = 505 / 7;
+    const soldTotal = calcSoldAmount();
+    // 二手剩余（未售物品按95%折旧）
+    const unsoldItems = PLAN.items.filter(i => !i.sold);
+    const unsoldValue = unsoldItems.reduce((s, i) => s + Math.round(i.price * 0.95), 0);
+
+    const now = new Date();
+    const nowMonthNum = (now.getFullYear() - 2026) * 12 + (now.getMonth() + 1);
+
+    let cumulative = currentBalance;
+    const targets = [];
+
+    PLAN.months.forEach((m, i) => {
+        const monthNum = i + 4;
+        // 只显示当前月和未来月
+        if (monthNum < nowMonthNum) return;
+
+        const y = parseInt(m.key.split('-')[0]);
+        const mo = parseInt(m.key.split('-')[1]);
+        const daysInMo = new Date(y, mo, 0).getDate();
+
+        const deliveryTarget = Math.round(dailyDelivery * daysInMo);
+        const salaryThisMonth = PLAN.monthlySalarySave;
+
+        const prevCumulative = cumulative;
+        cumulative += salaryThisMonth + deliveryTarget;
+
+        let status = monthNum === nowMonthNum ? 'current' : 'future';
+
+        let target = cumulative;
+        let desc = `工资${fmt(salaryThisMonth)} + 外卖${fmt(deliveryTarget)}`;
+        const isLast = m.key === '2027-01';
+        if (isLast) {
+            target = PLAN.target;
+            const extraNeeded = PLAN.target - prevCumulative - salaryThisMonth - deliveryTarget - unsoldValue;
+            desc = `${fmt(prevCumulative)} + 工资${fmt(salaryThisMonth)} + 外卖${fmt(deliveryTarget)} + 二手${fmt(unsoldValue)} + 额外${fmt(Math.max(0, extraNeeded))}`;
+        }
+
+        const deliveryActual = getMonthDeliveryActual(m.key);
+        const deliveryGap = Math.max(0, deliveryTarget - deliveryActual);
+
+        targets.push(`
+            <div class="timeline-item ${status}">
+                <div class="timeline-date">${m.label}月底 ${status === 'current' ? '🔥' : '⏳'}</div>
+                <div class="timeline-target">${fmt(target)}</div>
+                <div class="timeline-desc">${desc}</div>
+                ${status === 'current' && deliveryGap > 0 ? `<div style="font-size:11px;color:var(--warning-light);margin-top:4px">本月外卖还差 ${fmt(deliveryGap)}</div>` : ''}
+                ${isLast ? `<div style="font-size:11px;color:var(--info);margin-top:4px">二手含 ${unsoldItems.length} 件未售物品</div>` : ''}
+            </div>
+        `);
+    });
+
+    // 起始点
+    const lastReconcileObj = getLastReconcile();
+    const startPoint = `
+        <div class="timeline-item done">
+            <div class="timeline-date">当前</div>
+            <div class="timeline-target">${fmt(currentBalance)}</div>
+            <div class="timeline-desc">${lastReconcileObj ? '对账 ' + lastReconcileObj.date : '理论余额'}</div>
+        </div>
+    `;
+
+    document.getElementById('timeline').innerHTML = startPoint + targets.join('');
+}
+
+function saveActual(date, index) {
+    const val = parseFloat(document.getElementById('actual_' + index).value);
+    if (isNaN(val)) { toast('请输入数字'); return; }
+    PLAN.monthlyActuals[date] = val;
+    saveData(); renderTimeline(); toast('已保存');
+}
+
+function clearActual(date) {
+    delete PLAN.monthlyActuals[date];
+    saveData(); renderTimeline(); toast('已清除');
+}
+
+function switchTab(page, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    el.classList.add('active');
+}
+
+function renderAll() {
+    renderDashboard();
+    renderItems();
+    renderDelivery();
+    renderExtra();
+    renderGapDetail();
+    renderTimeline();
+}
+
+function init() {
+    loadData();
+    applyTheme();
+    document.getElementById('headerDate').textContent = today();
+    renderAll();
+}
+
+init();
+</script>
+</body>
+</html>
+
+<!-- PWA Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>

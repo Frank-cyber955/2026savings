@@ -1,0 +1,22 @@
+{
+    "name": "2026年存款计划",
+    "short_name": "存款计划",
+    "description": "个人存款目标追踪与记录",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#0a0a0f",
+    "theme_color": "#6366f1",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
